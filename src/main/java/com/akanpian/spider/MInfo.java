@@ -5,12 +5,37 @@ package com.akanpian.spider;
  * @author zhaoheng
  *
  */
-public class LInfo {
+public class MInfo {
 	public String info;
 	public String title;
 	public String html;
 	public String img;
 	public String url;
+	public String getUrl() {
+		return "view/" + code + ".html";
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getIframe() {
+		return iframe;
+	}
+
+	public void setIframe(String iframe) {
+		this.iframe = iframe;
+	}
+
+	public int getCode() {
+		return code;
+	}
+
+	public void setCode(int code) {
+		this.code = code;
+	}
+
+	public String iframe;
 	public int code;
 
 	public String getInfo() {

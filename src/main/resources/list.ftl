@@ -56,8 +56,8 @@ if(ua.indexOf('phone') == -1 && ua.indexOf('pad') ==-1 && ua.indexOf('android') 
         <div class="plist"><ul>
         <#assign is = data[key]>
         <#list is as i>
-			<li><div class="video"><a class="pic" href="${i.html}"><img width="90" height="120" src="${i.img}"></a><a class="set" href="${i.html}">${i.info}</a></div>
-			<a href="${i.html}" style="font-size:12px">${i.title}</a>
+			<li><div class="video"><a class="pic" href="${i.url}"><img width="90" height="120" src="${i.img}"></a><a class="set" href="${i.url}">${i.info}</a></div>
+			<a href="${i.url}" style="font-size:12px">${i.title}</a>
 			</li>
 		</#list>
           </ul></div>

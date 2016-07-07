@@ -42,14 +42,14 @@ public class Main {
 	private static void genIndex() throws Exception {
 		String url = "http://www.jinzidu.com/";
 		Document doc = Jsoup.connect(url).get();
-		Map<String, ArrayList<LInfo>> data = main(doc.getElementById("content"));
+		Map<String, ArrayList<MInfo>> data = main(doc.getElementById("content"));
 		genDetail(data);
 		gen(data, "list.ftl", "index.html");
 	}
 
-	private static void genDetail(Map<String, ArrayList<LInfo>> data) {
-		for (List<LInfo> lifs : data.values()) {
-			for (LInfo i : lifs) {
+	private static void genDetail(Map<String, ArrayList<MInfo>> data) {
+		for (List<MInfo> lifs : data.values()) {
+			for (MInfo i : lifs) {
 				try {
 					File dfd = new File(outDir, "view");
 					if (!dfd.exists())
@@ -57,9 +57,9 @@ public class Main {
 					File df = new File(dfd, i.code + ".html");
 					if (!df.exists()) {
 						Document doc = Jsoup.connect(i.html).get();
-						String player = doc.getElementsByTag("iframe").toString();
-						Map<String, String> m = new HashMap<String, String>();
-						m.put("player", player);
+						i.iframe = doc.getElementsByTag("iframe").toString();
+						Map<String, MInfo> m = new HashMap<String, MInfo>();
+						m.put("player", i);
 						gen(m, "detail.ftl", "view/" + i.code + ".html");
 					}
 				} catch (Exception e) {
@@ -73,22 +73,23 @@ public class Main {
 
 	}
 
-	private static Map<String, ArrayList<LInfo>> main(Element emain) {
+	private static Map<String, ArrayList<MInfo>> main(Element emain) {
 		Elements etypes = emain.getElementsByTag("h2");
 		Elements els = emain.getElementsByTag("ul");
 		Element einfo;
-		ArrayList<LInfo> is;
-		LInfo inf;
-		Map<String, ArrayList<LInfo>> data = new LinkedHashMap<String, ArrayList<LInfo>>();
+		ArrayList<MInfo> is;
+		MInfo inf;
+		Map<String, ArrayList<MInfo>> data = new LinkedHashMap<String, ArrayList<MInfo>>();
 		for (int x = 0; x < etypes.size(); x++) {
-			is = new ArrayList<LInfo>();
+			is = new ArrayList<MInfo>();
 			for (Element mv : els.get(x).getElementsByTag("li")) {
 				einfo = mv.getElementsByClass("pic").get(0);
-				inf = new LInfo();
+				inf = new MInfo();
 				inf.title = einfo.attr("title").trim();
 				inf.img = mv.getElementsByTag("img").get(0).attr("src").trim();
 				inf.html = einfo.attr("href").trim();
 				inf.info = mv.getElementsByClass("set").get(0).text();
+				inf.code = inf.title.hashCode();
 				is.add(inf);
 			}
 			data.put(etypes.get(x).text(), is);

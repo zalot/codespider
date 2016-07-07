@@ -8,7 +8,7 @@
 <meta name="keywords" content="手机热门推荐美剧">
 <meta name="description" content="免费影院提供:手机热门推荐影片在线观看">
 <meta name="title" content="手机热门推荐影片在线观看 - 免费影院&lt;">
-<link href="css/style.css" rel="stylesheet" type="text/css">
+<link href="../css/style.css" rel="stylesheet" type="text/css">
 <style type="text/css">object,embed{                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;                -o-animation-duration:.001s;-o-animation-name:playerInserted;                animation-duration:.001s;animation-name:playerInserted;}                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}</style>
 <div id="shareImage" style="display: none;">
 </div>
@@ -24,7 +24,7 @@ if(ua.indexOf('phone') == -1 && ua.indexOf('pad') ==-1 && ua.indexOf('android') 
 
 <body>
 <div id="header">
-    <div class="logo"><img src="images/logo.png"/>
+    <div class="logo"><img src="../images/logo.png"/>
 </div>
 <form action="/search.php">
 <div class="searchFormCon globalPadding">
@@ -46,14 +46,15 @@ if(ua.indexOf('phone') == -1 && ua.indexOf('pad') ==-1 && ua.indexOf('android') 
 
 <div id="content">
 <div class="c-box">
+<#if data?size gt 0>
+	<#assign p = data['player']>
     <div class="title">        
-        <h1 class="c"><a href="http://www.jinzidu.com/movie/2016/05/1335.html">魔兽</a><sub>魔兽</sub></h1>
+        <h1 class="c"><a href="${p.url}">${p.title}</a><sub>${p.title}</sub></h1>
     </div>
     <div id="player">
-	
-<iframe src="http://sb.nb211.com/?vid=CNDI0MjI0MA==-yk" scrolling="no" frameborder="0" height="270" id="mainFrame" width="100%"></iframe>
-
-</div>
+		${p.iframe}
+	</div>
+</#if>
 </div>
 	<div class="c-box">
 	<script src='http://slb.sushouge.com/s.php?id=9587'></script>
