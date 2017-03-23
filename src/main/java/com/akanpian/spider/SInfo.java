@@ -1,49 +1,22 @@
 package com.akanpian.spider;
 
 /**
- * List info
+ * Spider Info
+ * 
  * @author zhaoheng
  *
  */
-public class MInfo {
-	public String info;
-	public String title;
-	public String html;
-	public String img;
-	public String url;
-	public String getUrl() {
-		return "view/" + code + ".html";
+public class SInfo {
+	public String typeInfo = "";
+	public String title = "";
+	public String imgURL = "";
+
+	public String getTypeInfo() {
+		return typeInfo;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public String getIframe() {
-		return iframe;
-	}
-
-	public void setIframe(String iframe) {
-		this.iframe = iframe;
-	}
-
-	public int getCode() {
-		return code;
-	}
-
-	public void setCode(int code) {
-		this.code = code;
-	}
-
-	public String iframe;
-	public int code;
-
-	public String getInfo() {
-		return info;
-	}
-
-	public void setInfo(String info) {
-		this.info = info;
+	public void setTypeInfo(String typeInfo) {
+		this.typeInfo = typeInfo;
 	}
 
 	public String getTitle() {
@@ -54,19 +27,55 @@ public class MInfo {
 		this.title = title;
 	}
 
-	public String getHtml() {
-		return html;
+	public String getImgURL() {
+		return imgURL;
 	}
 
-	public void setHtml(String html) {
-		this.html = html;
+	public void setImgURL(String imgURL) {
+		this.imgURL = imgURL;
 	}
 
-	public String getImg() {
-		return img;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setImg(String img) {
-		this.img = img;
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getInnerHTML() {
+		return innerHTML;
+	}
+
+	public void setInnerHTML(String innerHTML) {
+		this.innerHTML = innerHTML;
+	}
+
+	public String getSpiderDetailURL() {
+		return spiderDetailURL;
+	}
+
+	public void setSpiderDetailURL(String spiderDetailURL) {
+		this.spiderDetailURL = spiderDetailURL;
+	}
+
+	public int getCode() {
+		return code;
+	}
+
+	public void setCode(int code) {
+		this.code = code;
+	}
+
+	public String url = "";
+	public String innerHTML = "";
+
+	public String spiderDetailURL = "";
+	public int code;
+
+	@Override
+	public String toString() {
+		return "SInfo [typeInfo=" + typeInfo + ", title=" + title + ", img=" + imgURL + ", detailURL=" + spiderDetailURL
+				+ ", innerHTML=" + innerHTML + ", code=" + code + "]";
 	}
 }

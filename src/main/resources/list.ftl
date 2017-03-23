@@ -48,21 +48,31 @@ if(ua.indexOf('phone') == -1 && ua.indexOf('pad') ==-1 && ua.indexOf('android') 
 <div class="c-box">
 <script src="/csss/foot2.js"></script>
 </div>
-<#if data?size gt 0>
-<#list data?keys as key>
+<#if data['list']??>
+<#assign lmap = data['list']>
+<#list lmap?keys as key>
 <div id="content">
     <div class="c-box">
         <div class="title"><h2>${key}</h2></div>
         <div class="plist"><ul>
-        <#assign is = data[key]>
+        <#assign is = lmap[key]>
         <#list is as i>
-			<li><div class="video"><a class="pic" href="${i.url}"><img width="90" height="120" src="${i.img}"></a><a class="set" href="${i.url}">${i.info}</a></div>
+			<li><div class="video"><a class="pic" href="${i.url}"><img width="90" height="120" src="${i.imgURL}"></a><a class="set" href="${i.url}">${i.typeInfo}</a></div>
 			<a href="${i.url}" style="font-size:12px">${i.title}</a>
 			</li>
 		</#list>
           </ul></div>
     </div>
 </#list>
+</#if>
+
+<#if data['pg1']??>
+<div id="menu">
+    <ul>
+        <li class="s"><a href="${data['pg1']}">首页</a></li>
+		<li><a href="${data['pg2']}">下一页</a></li>
+    </ul>
+</div>
 </#if>
 <div id="menu">
     <ul>
