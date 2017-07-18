@@ -21,6 +21,7 @@ public class MovieJoiner {
 		List<Movie> inMovies = new ArrayList<Movie>();
 		for (String videoUri : srcVideoPath) {
 			inMovies.add(MovieCreator.build(videoUri));
+			
 		}
 
 		List<Track> videoTracks = new LinkedList<Track>();
