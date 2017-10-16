@@ -1,15 +1,17 @@
-package com.akanpian.jdbc;
+package com.akanpian.utils;
 
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public class ConnectionTool {
+public class ConnectionUtils {
 	public enum JDBCTYPE {
 
 	}
 
-	public static Connection getEmdbDerbyConnection() throws Exception {
+	
+//	Configuration conf = new Configuration();
+	public static Connection getEmbeddedDerby() throws Exception {
 		Class.forName("org.apache.derby.jdbc.JDBC");
 		String p = System.getProperty("user.dir") + File.separator + "derbydb";
 		return DriverManager.getConnection("jdbc:derby:" + p);

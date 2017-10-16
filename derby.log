@@ -1,11 +1,11 @@
 ----------------------------------------------------------------
-Tue Jul 18 17:50:04 CST 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.13.1.1 - (1765088): instance a816c00e-015d-551a-c69c-000006619b50 
-on database directory D:\work\workspace\java\mine\codespider\derbydb with class loader sun.misc.Launcher$AppClassLoader@c387f44 
-Loaded from file:/D:/work/maven_repository/org/apache/derby/derby/10.13.1.1/derby-10.13.1.1.jar
+Sat Oct 14 23:29:13 CST 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.13.1.1 - (1765088): instance a816c00e-015f-1b80-e59e-000007031050 
+on database directory C:\Users\ZALOT\git\codespider\derbydb with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Loaded from file:/C:/Users/ZALOT/.m2/repository/org/apache/derby/derby/10.13.1.1/derby-10.13.1.1.jar
 java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_40-b25
-user.dir=D:\work\workspace\java\mine\codespider
+java.runtime.version=1.8.0_20-b26
+user.dir=C:\Users\ZALOT\git\codespider
 os.name=Windows 8.1
 os.arch=amd64
 os.version=6.3

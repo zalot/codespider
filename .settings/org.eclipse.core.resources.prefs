@@ -1,3 +1,5 @@
 eclipse.preferences.version=1
 encoding//src/main/java/com/akanpian/spider/OldHttpSpider.java=UTF-8
 encoding//src/main/java/com/akanpian/spider/movie/Av18MovieSpider.java=UTF-8
+encoding//src/main/java/com/akanpian/spider/movie/Mm7MovieSpider.java=UTF-8
+encoding//src/main/resources/catoondetail.ftl=UTF-8

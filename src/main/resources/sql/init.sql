@@ -1,14 +1,27 @@
-drop table smovie;
-create table smovie(
+drop table avspider;
+create table avspider(
 	name varchar(200),
-	img varchar(200),
-	simg  varchar(200),
-	url varchar(200),
-	type varchar(10),
-	cate  varchar(10),
-	src varchar(10),
-	primary key(name)
+	aname varchar(200),
+	simg  varchar(150),
+	simg_local varchar(150),
+	img varchar(150),
+	img_local varchar(150),
+	url varchar(300),
+	svideo varchar(150),
+	svideo_local varchar(150),
+	video varchar(150),
+	keywords varchar(100),
+	nvyouname varchar(100),
+	fanhao varchar(20),
+	cate  varchar(40),
+	src varchar(40),
+	faxing varchar(100),
+    zhizuo varchar(100),
+    daoyan varchar(100),
+    riqi varchar(100),
+    detalURLs varchar(800),
+	primary key(name,src)
 );
 
-insert into smovie(name,img,simg,url,src,type,cate) values('test','img','simg','http://test','18av','10','null')
-select * from smovie where name like '%√¿÷Ï%'my
+
+select * from avspider where src = '18av'

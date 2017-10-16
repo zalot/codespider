@@ -1,13 +1,17 @@
 package com.akanpian.spider.movie;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Request;
@@ -17,28 +21,36 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.akanpian.jdbc.ConnectionTool;
 import com.akanpian.spider.JsoupSpider;
-import com.akanpian.spider.SMovie;
+import com.akanpian.spider.SAv;
+import com.akanpian.utils.DBUtils;
 
 public class Av18MovieSpider extends JsoupSpider {
+	public static Map<String, String> PGS = new LinkedHashMap<String, String>();
+	public static String HOST = "http://vv2069.pw";
+	public static int DIRSIZE = 100;
 
-	public static Connection con = null;
 	static {
-		PGS.put("中文字幕",
-				"http://vv2069.pw/serch_18v/%E4%B8%AD%E6%96%87%E5%AD%97%E5%B9%95%E5%85%A8%E9%83%A8%E5%88%97%E8%A1%A8_$P.htm");
-		PGS.put("無修正全",
-				"http://vv2069.pw/serch_18v/%E7%84%A1%E4%BF%AE%E6%AD%A3%E5%85%A8%E9%83%A8%E5%88%97%E8%A1%A8_$P.htm");
-		PGS.put("短片",
-				"http://vv2069.pw/serch_18v/%E7%9F%AD%E7%89%87%E5%8D%80%E5%85%A8%E9%83%A8%E5%88%97%E8%A1%A8_$P.htm");
-		PGS.put("H動畫", "http://vv2069.pw/serch_18v/H%E5%8B%95%E7%95%AB%E5%85%A8%E9%83%A8%E5%88%97%E8%A1%A8_$P.htm");
+		PGS.put("JZ_中文字幕",
+				HOST + "/serch_18v/%E4%B8%AD%E6%96%87%E5%AD%97%E5%B9%95%E5%85%A8%E9%83%A8%E5%88%97%E8%A1%A8_$P.htm");
+		PGS.put("JZ_無修正全", HOST + "/serch_18v/%E7%84%A1%E4%BF%AE%E6%AD%A3%E5%85%A8%E9%83%A8%E5%88%97%E8%A1%A8_$P.htm");
+		PGS.put("JZ_短片", HOST + "/serch_18v/%E7%9F%AD%E7%89%87%E5%8D%80%E5%85%A8%E9%83%A8%E5%88%97%E8%A1%A8_$P.htm");
+		PGS.put("JZ_H動畫", HOST + "/serch_18v/H%E5%8B%95%E7%95%AB%E5%85%A8%E9%83%A8%E5%88%97%E8%A1%A8_$P.htm");
+
+		PGS.put("DT_無修正全部列表",
+				HOST + "/serch_dt/DT_%E7%84%A1%E4%BF%AE%E6%AD%A3%E5%85%A8%E9%83%A8%E5%88%97%E8%A1%A8_$P.htm");
+		PGS.put("DT_中文字幕全部列表",
+				HOST + "/serch_dt/DT_%E4%B8%AD%E6%96%87%E5%AD%97%E5%B9%95%E5%85%A8%E9%83%A8%E5%88%97%E8%A1%A8_$P.htm");
+		PGS.put("DT_國產自拍全部列表",
+				HOST + "/serch_dt/DT_%E5%9C%8B%E7%94%A2%E8%87%AA%E6%8B%8D%E5%85%A8%E9%83%A8%E5%88%97%E8%A1%A8_$P.htm");
+
+		PGS.put("DF_全部列表", HOST + "/serch_18av/DF_%E5%85%A8%E9%83%A8%E5%88%97%E8%A1%A8_$P.htm");
 	}
 
-	public static SMovie create18av(String name, String url, String simg, String img, String cate) {
-		SMovie s = new SMovie();
+	public static SAv create18av(String name, String url, String simg, String img, String cate) {
+		SAv s = new SAv();
 		s.src = "18av";
-		s.type = "av";
-		s.name = name;
+		s.name = fixDirname(name);
 		s.url = url;
 		s.simg = simg;
 		s.img = img;
@@ -70,39 +82,60 @@ public class Av18MovieSpider extends JsoupSpider {
 		}
 
 		public void run() {
-			Document d;
-			try {
-				d = spider.pageDocument(u, 30000);
-				if (d != null) {
-					spider.doDocument(d, type);
+			System.out.println("======= START [" + type + "] ->" + u);
+			if (STATEMAP.get(u.toString()) == null) {
+				Document d = null;
+				int all = 0;
+				int rt = 0;
+				int scount = 0;
+				while (true) {
+					try {
+						d = spider.doc(u, 8000);
+						break;
+					} catch (Exception e) {
+						rt++;
+					}
+					if (rt > 3) {
+						break;
+					}
 				}
-			} catch (IOException e) {
+				if (d != null) {
+					all = d.getElementsByClass("aRF").size();
+					scount = spider.doListpage(d, type);
+				}
+				spider.saveState(u, all + "=>" + scount);
+			}
+			System.out.println("======= END [" + type + "] ->" + u);
+		}
+	}
+
+	public void doSpider(ExecutorService exec) {
+		login();
+		for (String type : PGS.keySet()) {
+			try {
+				URL u = new URL(PGS.get(type).replace("$P", String.valueOf(1)));
+				Document d = doc(u, 15000);
+				if (d == null)
+					continue;
+				String count = d.getElementsByClass("page_previous").get(0).child(0).text();
+				// doListpage(d, type);
+
+				List<Av18Task> ts = new ArrayList<Av18Task>();
+
+				for (int x = 1; x < Integer.parseInt(count); x++) {
+					u = new URL(PGS.get(type).replace("$P", String.valueOf(x)));
+					Av18Task task = new Av18Task(this, u, type);
+					ts.add(task);
+					exec.submit(task);
+				}
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			System.out.println("over[" + type + "] ->" + u);
 		}
+		endSpider();
 	}
 
-	public void doPage() throws Exception {
-		login();
-		for (String type : Av18MovieSpider.PGS.keySet()) {
-			URL u = new URL(PGS.get(type).replace("$P", String.valueOf(1)));
-			Document d = pageDocument(u, 15000);
-			String count = d.getElementsByClass("page_previous").get(0).child(0).text();
-			doDocument(d, type);
-
-			List<Av18Task> ts = new ArrayList<Av18Task>();
-
-			for (int x = 2; x < Integer.parseInt(count); x++) {
-				u = new URL(PGS.get(type).replace("$P", String.valueOf(x)));
-				Av18Task task = new Av18Task(this, u, type);
-				ts.add(task);
-				exec.execute(task);
-			}
-		}
-	}
-
-	private int doDocument(Document d, String cate) {
+	private int doListpage(Document d, String cate) {
 		Elements es = d.getElementsByClass("aRF");
 		Element a, img;
 
@@ -113,45 +146,83 @@ public class Av18MovieSpider extends JsoupSpider {
 			if (!img.tagName().equals("img")) {
 				break;
 			}
-			saveMovie(create18av(img.attr("alt"), a.attr("href"), img.attr("src"), img.attr("link"), cate));
-			scount++;
+
+			SAv m = create18av(img.attr("alt"), a.attr("href"), img.attr("src"), img.attr("link"), cate);
+			if (do18Av(m)) {
+				scount++;
+			}
 		}
 		return scount;
 	}
 
-	private synchronized void saveMovie(SMovie m) {
-		if (con == null) {
+	private boolean do18Av(SAv m) {
+		try {
+			m._downImg = true;
+			downloadAvSpider(m, DIRSIZE);
+			saveAvSpider2DB(m);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	static StringBuffer sb = new StringBuffer();
+	static Map<String, SAv> dupcheck = new HashMap<String, SAv>();
+
+	private synchronized void saveCSV(SAv m) {
+		if (dupcheck.get(m.name) == null) {
+			// sb.append(m.toCSV()).append("\r\n");
+			dupcheck.put(m.name, m);
+		}
+	}
+
+	@Override
+	public void endSpider() {
+		if (sb.length() > 10) {
 			try {
-				con = ConnectionTool.getEmdbDerbyConnection();
+				File of = new File("e:\\smovie.data");
+				if (of.exists()) {
+					of.delete();
+				}
+				of.createNewFile();
+				FileWriter fw = new FileWriter(of);
+				fw.write(sb.toString());
+				fw.flush();
+				fw.close();
 			} catch (Exception e) {
-				e.printStackTrace();
-				con = null;
+
 			}
 		}
+	}
 
-		if (con != null) {
-			try {
-				PreparedStatement ps = con
-						.prepareStatement("insert into smovie(name,img,simg,url,src,type,cate) values(?,?,?,?,?,?,?)");
-				int i = 1;
-				ps.setString(i++, m.name);
-				ps.setString(i++, m.img);
-				ps.setString(i++, m.simg);
-				ps.setString(i++, m.url);
-				ps.setString(i++, m.src);
-				ps.setString(i++, m.type);
-				ps.setString(i++, m.cate);
-				ps.execute();
-				ps.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+	public static void _spider() throws Exception {
+		Av18MovieSpider av = new Av18MovieSpider();
+		ExecutorService exec = Executors.newFixedThreadPool(30);
+		av.doSpider(exec);
+		exec.shutdown();
+		exec.awaitTermination(30, TimeUnit.MINUTES);
+	}
+
+	public static void _fixlocalimg() throws Exception {
+		SAv ss = new SAv();
+		SAv up = new SAv();
+		ss.src = "18av";
+		
+		File f = null;
+		String p = null;
+		for(SAv s : DBUtils.getSAv(ss)) {
+			p = getDownloadPath(s, ".jpg", 100);
+			f = new File(BDIR,p);
+			if(f.exists()) {
+				up.name = s.name;
+				up.src = s.src;
+				up.img_local = p;
+				DBUtils.updateSAv(up);
 			}
 		}
 	}
 
 	public static void main(String[] args) throws Exception {
-		Av18MovieSpider av = new Av18MovieSpider();
-		av.doPage();
-		System.out.println("over");
+		_fixlocalimg();
 	}
 }

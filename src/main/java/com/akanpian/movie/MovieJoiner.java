@@ -53,9 +53,5 @@ public class MovieJoiner {
 		out.writeContainer(fc);
 		fc.close();
 	}
-	public static void main(String[] args) throws IOException {
-		String[] ins = new String[] { "F:/my/software/windows/study/系列/Japan Star/[上原亚衣]眼镜×女孩『上原亚衣』的校园生活 1.mp4", "F:/my/software/windows/study/系列/Japan Star/[上原亚衣]眼镜×女孩『上原亚衣』的校园生活 2.mp4"};
-		videoMerge(ins, "c:/a.mp4");
-	}
 
 }

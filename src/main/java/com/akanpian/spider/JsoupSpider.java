@@ -1,6 +1,5 @@
 package com.akanpian.spider;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +7,7 @@ import java.util.Map;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-public abstract class JsoupSpider extends HttpSpider {
+public abstract class JsoupSpider extends HttpAvSpider {
 
 	Map<String, String> cookies = new HashMap<String, String>();
 	boolean isLogin = false;
@@ -21,7 +20,19 @@ public abstract class JsoupSpider extends HttpSpider {
 
 	protected abstract Map<String, String> jsoupCookieLogin();
 
-	public Document pageDocument(URL url, int timeout) throws IOException {
-		return Jsoup.connect(url.toString()).cookies(cookies).timeout(timeout).get();
+	public Document doc(URL url, int timeout) {
+		int retry = 0;
+		while (true) {
+			if (retry > 3) {
+				break;
+			}
+			try {
+				return Jsoup.connect(url.toString()).userAgent(AGENT).cookies(cookies).timeout(timeout).get();
+			} catch (Exception e) {
+				retry++;
+				System.out.println(url + " doc timeout retry " + retry);
+			}
+		}
+		return null;
 	}
 }
